@@ -9,7 +9,6 @@ import { ProductosListaComponent } from './features/productos/pages/productos-li
 import { ProductosFormComponent } from './features/productos/pages/productos-form/productos-form.component';
 import { TransaccionesListaComponent } from './features/transacciones/pages/transacciones-lista/transacciones-lista.component';
 import { TransaccionesFormComponent } from './features/transacciones/pages/transacciones-form/transacciones-form.component';
-import { ReporteInventarioComponent } from './features/reportes/pages/reporte-inventario/reporte-inventario.component';
 
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
@@ -27,7 +26,7 @@ import {
     ProductosFormComponent,
     TransaccionesListaComponent,
     TransaccionesFormComponent,
-    ReporteInventarioComponent,
+    
     CategoriasProductosFormComponent
   ],
   imports: [

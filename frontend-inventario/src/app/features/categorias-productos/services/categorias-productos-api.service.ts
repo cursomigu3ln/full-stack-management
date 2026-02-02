@@ -33,7 +33,7 @@ export class CategoriasApiService {
     }
 
     return this.http.get<CategoriaProducto[]>(
-      `${this.baseUrl}/api/categorias`,
+      `${this.baseUrl}`,
       { params }
     );
   }
