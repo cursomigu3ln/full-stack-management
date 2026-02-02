@@ -1,0 +1,59 @@
+# =========================
+# .NET / NetCore (8/9/10)
+# =========================
+**/bin/
+**/obj/
+**/out/
+**/TestResults/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/*.cache
+**/*.log
+
+# =========================
+# Visual Studio / VS Code / Rider
+# =========================
+.vs/
+.vscode/
+.idea/
+*.rsuser
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# =========================
+# NuGet
+# =========================
+**/packages/
+**/*.nupkg
+**/*.snupkg
+**/project.assets.json
+**/project.packagespec.json
+**/nuget.g.props
+**/nuget.g.targets
+
+# =========================
+# Publish / artifacts
+# =========================
+**/publish/
+**/artifacts/
+**/*.pdb
+**/*.mdb
+**/*.orig
+
+# =========================
+# OS
+# =========================
+Thumbs.db
+.DS_Store
+
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/.angular/
+**/.next/
+**/.nuxt/
+**/coverage/
