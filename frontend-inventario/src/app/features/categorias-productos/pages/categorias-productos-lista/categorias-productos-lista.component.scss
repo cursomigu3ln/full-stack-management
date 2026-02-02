@@ -1,0 +1,38 @@
+.categoria-lista {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.categoria-lista__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.categoria-lista__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.categoria-lista__btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #1976d2;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.categoria-lista__btn:hover {
+  background: #125aa0;
+}
+
+.categoria-lista__empty {
+  padding: 14px;
+  border: 1px dashed #cfcfcf;
+  border-radius: 10px;
+  color: #666;
+}

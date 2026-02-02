@@ -1,10 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+import { CATEGORIAS_PRODUCTOS_ROUTES } from './features/categorias-productos/categorias-productos.routes';
+import { PRODUCTOS_ROUTES } from './features/productos/productos.routes';
+import { TRANSACCIONES_ROUTES } from './features/transacciones/transacciones.routes';
+import { REPORTES_ROUTES } from './features/reportes/reportes.routes';
+
+const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'productos' },
+  { path: 'categorias-productos', children: CATEGORIAS_PRODUCTOS_ROUTES },
+  { path: 'productos', children: PRODUCTOS_ROUTES },
+  { path: 'transacciones', children: TRANSACCIONES_ROUTES },
+  { path: 'reportes', children: REPORTES_ROUTES },
+
+  { path: '**', redirectTo: 'productos' }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

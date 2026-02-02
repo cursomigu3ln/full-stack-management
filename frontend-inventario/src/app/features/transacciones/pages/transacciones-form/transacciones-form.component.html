@@ -1,0 +1,157 @@
+<section class="form-ui">
+  <header class="form-ui__header">
+    <h2 class="form-ui__title">Transacción</h2>
+    <p class="form-ui__subtitle">Crea o edita una transacción de compra/venta.</p>
+  </header>
+
+  <form class="form-ui__form" [formGroup]="form" (ngSubmit)="guardar()">
+
+    <!-- Fecha -->
+    <div class="form-ui__field" [class.form-ui__field--invalid]="f.fecha.touched && f.fecha.invalid">
+      <label class="form-ui__label" for="fecha">
+        Fecha <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="fecha" class="form-ui__control" type="date" formControlName="fecha" />
+
+      <div class="form-ui__error" *ngIf="f.fecha.touched && f.fecha.invalid">
+        <span *ngIf="f.fecha.errors?.['required']">Fecha es obligatoria.</span>
+      </div>
+    </div>
+
+    <!-- Tipo -->
+    <div class="form-ui__field" [class.form-ui__field--invalid]="f.TipoTransaccion.touched && f.TipoTransaccion.invalid">
+      <label class="form-ui__label" for="TipoTransaccion">
+        Tipo <span class="form-ui__req">*</span>
+      </label>
+
+      <select id="TipoTransaccion" class="form-ui__control" formControlName="TipoTransaccion">
+        <option *ngFor="let t of TipoTransaccions" [ngValue]="t">{{ t }}</option>
+      </select>
+
+      <div class="form-ui__error" *ngIf="f.TipoTransaccion.touched && f.TipoTransaccion.invalid">
+        <span *ngIf="f.TipoTransaccion.errors?.['required']">Tipo es obligatorio.</span>
+      </div>
+    </div>
+
+    <!-- Producto -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.IdProducto.touched && f.IdProducto.invalid">
+
+      <label class="form-ui__label" for="IdProducto">
+        Producto <span class="form-ui__req">*</span>
+      </label>
+
+      <select id="IdProducto" class="form-ui__control" formControlName="IdProducto">
+        <option [ngValue]="null">-- Selecciona --</option>
+
+        <option *ngFor="let p of productos" [ngValue]="p.id">
+          {{ p.nombre }} — ${{ p.precio | number:'1.2-2' }} (stock: {{ p.stock }})
+        </option>
+      </select>
+
+      <div class="form-ui__hint" *ngIf="cargandoProductos">Cargando productos...</div>
+
+      <!-- Hint stock seleccionado (UX) -->
+      <div class="form-ui__hint"
+           *ngIf="!cargandoProductos && stockSeleccionado !== null && f.TipoTransaccion.value === 'VENTA'">
+        Stock disponible: <strong>{{ stockSeleccionado }}</strong>
+      </div>
+
+      <div class="form-ui__error" *ngIf="f.IdProducto.touched && f.IdProducto.invalid">
+        <span *ngIf="f.IdProducto.errors?.['required']">Producto es obligatorio.</span>
+        <span *ngIf="f.IdProducto.errors?.['min']">Debe ser mayor a 0.</span>
+      </div>
+    </div>
+
+    <!-- Cantidad -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="(f.cantidad.touched && f.cantidad.invalid) || (tieneErrorStock && f.cantidad.touched)">
+
+      <label class="form-ui__label" for="cantidad">
+        Cantidad <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="cantidad"
+             class="form-ui__control"
+             type="number"
+             formControlName="cantidad"
+             min="1"
+             step="1" />
+
+      <!-- Errores normales -->
+      <div class="form-ui__error" *ngIf="f.cantidad.touched && f.cantidad.invalid">
+        <span *ngIf="f.cantidad.errors?.['required']">Cantidad es obligatoria.</span>
+        <span *ngIf="f.cantidad.errors?.['min']">Mínimo 1.</span>
+      </div>
+
+      <!-- Error complejo: stock insuficiente -->
+      <div class="form-ui__error" *ngIf="tieneErrorStock && errorStock && f.cantidad.touched">
+        Stock insuficiente: disponible {{ errorStock.disponible }} y solicitaste {{ errorStock.solicitado }}.
+      </div>
+
+      <!-- Hint cuando es venta (opcional) -->
+      <div class="form-ui__hint"
+           *ngIf="!tieneErrorStock && f.TipoTransaccion.value === 'VENTA' && stockSeleccionado !== null">
+        Tip: no puedes vender más de <strong>{{ stockSeleccionado }}</strong> unidades.
+      </div>
+    </div>
+
+    <!-- Precio Unitario -->
+    <div class="form-ui__field" [class.form-ui__field--invalid]="f.precioUnitario.touched && f.precioUnitario.invalid">
+      <label class="form-ui__label" for="precioUnitario">
+        Precio unitario <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="precioUnitario"
+             class="form-ui__control"
+             type="number"
+             formControlName="precioUnitario"
+             min="0"
+             step="0.01" />
+
+      <div class="form-ui__error" *ngIf="f.precioUnitario.touched && f.precioUnitario.invalid">
+        <span *ngIf="f.precioUnitario.errors?.['required']">Precio unitario es obligatorio.</span>
+        <span *ngIf="f.precioUnitario.errors?.['min']">No puede ser negativo.</span>
+      </div>
+    </div>
+
+    <!-- Precio Total (readonly) -->
+    <div class="form-ui__field">
+      <label class="form-ui__label" for="precioTotal">Precio total</label>
+      <input id="precioTotal" class="form-ui__control" type="number" formControlName="precioTotal" readonly />
+      <div class="form-ui__hint">Se calcula automáticamente: cantidad × precio unitario.</div>
+    </div>
+
+    <!-- Detalle -->
+    <div class="form-ui__field" [class.form-ui__field--invalid]="f.detalle.touched && f.detalle.invalid">
+      <label class="form-ui__label" for="detalle">Detalle</label>
+
+      <textarea
+        id="detalle"
+        class="form-ui__control form-ui__control--textarea"
+        rows="3"
+        formControlName="detalle"
+        placeholder="Opcional"
+      ></textarea>
+
+      <div class="form-ui__hint">Máximo 500 caracteres.</div>
+
+      <div class="form-ui__error" *ngIf="f.detalle.touched && f.detalle.invalid">
+        <span *ngIf="f.detalle.errors?.['maxlength']">Máximo 500 caracteres.</span>
+      </div>
+    </div>
+
+    <footer class="form-ui__actions">
+      <button class="form-ui__btn form-ui__btn--primary"
+              type="submit"
+              [disabled]="form.invalid || guardando">
+        Guardar
+      </button>
+
+      <button class="form-ui__btn form-ui__btn--secondary" type="button" (click)="cancelar()">
+        Cancelar
+      </button>
+    </footer>
+  </form>
+</section>

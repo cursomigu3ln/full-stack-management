@@ -1,0 +1,123 @@
+/* =========================================================
+   FORM UI (BEM reusable)
+   Bloque: .form-ui
+   ========================================================= */
+
+.form-ui {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.form-ui__header {
+  margin-bottom: 16px;
+}
+
+.form-ui__title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.form-ui__subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.form-ui__form {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.form-ui__field {
+  display: grid;
+  gap: 6px;
+}
+
+.form-ui__label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.form-ui__req {
+  color: #c62828;
+}
+
+.form-ui__control {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  font-size: 14px;
+  background: #fff;
+}
+
+.form-ui__control:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+.form-ui__control--textarea {
+  resize: vertical;
+}
+
+.form-ui__hint {
+  font-size: 12px;
+  color: #7a7a7a;
+}
+
+.form-ui__error {
+  font-size: 12px;
+  color: #c62828;
+}
+
+.form-ui__field--invalid .form-ui__control {
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+.form-ui__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.form-ui__btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-ui__btn--primary {
+  background: #1976d2;
+  color: #fff;
+}
+
+.form-ui__btn--primary:hover {
+  background: #125aa0;
+}
+
+.form-ui__btn--secondary {
+  background: #fff;
+  border-color: #d0d0d0;
+  color: #333;
+}
+
+.form-ui__btn--secondary:hover {
+  background: #f5f5f5;
+}
+
+.form-ui__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

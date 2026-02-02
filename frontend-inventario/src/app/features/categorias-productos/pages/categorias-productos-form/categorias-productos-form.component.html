@@ -1,0 +1,64 @@
+<section class="form-ui">
+  <header class="form-ui__header">
+    <h2 class="form-ui__title">Categoría</h2>
+    <p class="form-ui__subtitle">Complete la información y guarde.</p>
+  </header>
+
+  <form class="form-ui__form" [formGroup]="form" (ngSubmit)="guardar()">
+
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.nombre.touched && f.nombre.invalid">
+      <label class="form-ui__label" for="nombre">
+        Nombre <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="nombre" class="form-ui__control" type="text" formControlName="nombre" />
+
+      <div class="form-ui__error" *ngIf="f.nombre.touched && f.nombre.invalid">
+        <span *ngIf="f.nombre.errors?.['required']">Nombre es obligatorio.</span>
+        <span *ngIf="f.nombre.errors?.['minlength']">Mínimo 2 caracteres.</span>
+        <span *ngIf="f.nombre.errors?.['maxlength']">Máximo 120 caracteres.</span>
+      </div>
+    </div>
+
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.descripcion.touched && f.descripcion.invalid">
+      <label class="form-ui__label" for="descripcion">Descripción</label>
+
+      <textarea
+        id="descripcion"
+        class="form-ui__control form-ui__control--textarea"
+        rows="3"
+        formControlName="descripcion"
+      ></textarea>
+
+      <div class="form-ui__hint">Máximo 300 caracteres.</div>
+
+      <div class="form-ui__error" *ngIf="f.descripcion.touched && f.descripcion.invalid">
+        <span *ngIf="f.descripcion.errors?.['maxlength']">Máximo 300 caracteres.</span>
+      </div>
+    </div>
+
+    <div class="form-ui__field">
+      <label class="form-ui__label" for="estado">
+        Estado <span class="form-ui__req">*</span>
+      </label>
+
+      <select id="estado" class="form-ui__control" formControlName="estado">
+        <option [ngValue]="1">Activo</option>
+        <option [ngValue]="0">Inactivo</option>
+      </select>
+    </div>
+
+    <footer class="form-ui__actions">
+      <button class="form-ui__btn form-ui__btn--primary" type="submit" [disabled]="form.invalid || form.pending">
+        Guardar
+      </button>
+
+      <button class="form-ui__btn form-ui__btn--secondary" type="button" (click)="cancelar()">
+        Cancelar
+      </button>
+    </footer>
+
+  </form>
+</section>

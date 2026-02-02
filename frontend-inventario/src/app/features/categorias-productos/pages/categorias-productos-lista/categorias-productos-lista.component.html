@@ -1,0 +1,75 @@
+<section class="list-ui">
+  <header class="list-ui__header">
+    <div class="list-ui__header-left">
+      <h2 class="list-ui__title">Categorías</h2>
+      <p class="list-ui__subtitle">Administra las categorías del inventario.</p>
+    </div>
+
+    <div class="list-ui__header-right">
+      <button class="list-ui__btn list-ui__btn--primary" type="button" (click)="irNuevo()">
+        + Nuevo
+      </button>
+    </div>
+  </header>
+
+  <div class="list-ui__toolbar">
+    <div class="list-ui__search">
+      <input class="list-ui__search-input" type="text" placeholder="Buscar por nombre..." />
+    </div>
+  </div>
+
+  <div class="list-ui__card">
+    <table class="list-ui__table">
+      <thead class="list-ui__thead">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th class="list-ui__cell--center">Estado</th>
+        <th class="list-ui__cell--right">Acciones</th>
+      </tr>
+      </thead>
+
+      <tbody class="list-ui__tbody">
+      <!-- Mock: luego conectamos a API -->
+      <tr>
+        <td>1</td>
+        <td>Bebidas</td>
+        <td>Productos líquidos</td>
+        <td class="list-ui__cell--center">
+          <span class="list-ui__badge list-ui__badge--active">Activo</span>
+        </td>
+        <td class="list-ui__cell--right">
+          <div class="list-ui__actions">
+            <button class="list-ui__icon-btn" type="button" title="Editar">✏️</button>
+            <button class="list-ui__icon-btn" type="button" title="Eliminar">🗑️</button>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td>2</td>
+        <td>Electrónica</td>
+        <td>Accesorios</td>
+        <td class="list-ui__cell--center">
+          <span class="list-ui__badge list-ui__badge--inactive">Inactivo</span>
+        </td>
+        <td class="list-ui__cell--right">
+          <div class="list-ui__actions">
+            <button class="list-ui__icon-btn" type="button" title="Editar">✏️</button>
+            <button class="list-ui__icon-btn" type="button" title="Eliminar">🗑️</button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- si no hay datos (luego lo activamos con *ngIf) -->
+    <!-- <div class="list-ui__empty">No existen categorías registradas.</div> -->
+
+    <footer class="list-ui__footer">
+      <span>Total: 2</span>
+      <span>Listado de categorías</span>
+    </footer>
+  </div>
+</section>

@@ -1,0 +1,134 @@
+<section class="form-ui">
+  <header class="form-ui__header">
+    <h2 class="form-ui__title">Producto</h2>
+    <p class="form-ui__subtitle">Crea o edita un producto del inventario.</p>
+  </header>
+
+  <form class="form-ui__form" [formGroup]="form" (ngSubmit)="guardar()">
+
+    <!-- Nombre -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.nombre.touched && f.nombre.invalid">
+      <label class="form-ui__label" for="nombre">
+        Nombre <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="nombre" class="form-ui__control" type="text" formControlName="nombre" placeholder="Ej: Laptop" />
+
+      <div class="form-ui__error" *ngIf="f.nombre.touched && f.nombre.invalid">
+        <span *ngIf="f.nombre.errors?.['required']">Nombre es obligatorio.</span>
+        <span *ngIf="f.nombre.errors?.['minlength']">Mínimo 2 caracteres.</span>
+        <span *ngIf="f.nombre.errors?.['maxlength']">Máximo 150 caracteres.</span>
+      </div>
+    </div>
+
+    <!-- Categoría -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.idCategoria.touched && f.idCategoria.invalid">
+      <label class="form-ui__label" for="idCategoria">
+        Categoría <span class="form-ui__req">*</span>
+      </label>
+
+      <select id="idCategoria" class="form-ui__control" formControlName="idCategoria">
+        <option [ngValue]="null">-- Selecciona --</option>
+        <option *ngFor="let c of categorias" [ngValue]="c.id">{{ c.nombre }}</option>
+      </select>
+
+      <div class="form-ui__error" *ngIf="f.idCategoria.touched && f.idCategoria.invalid">
+        <span *ngIf="f.idCategoria.errors?.['required']">Categoría es obligatoria.</span>
+      </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.descripcion.touched && f.descripcion.invalid">
+      <label class="form-ui__label" for="descripcion">Descripción</label>
+
+      <textarea
+        id="descripcion"
+        class="form-ui__control form-ui__control--textarea"
+        rows="3"
+        formControlName="descripcion"
+        placeholder="Opcional"
+      ></textarea>
+
+      <div class="form-ui__hint">Máximo 500 caracteres.</div>
+
+      <div class="form-ui__error" *ngIf="f.descripcion.touched && f.descripcion.invalid">
+        <span *ngIf="f.descripcion.errors?.['maxlength']">Máximo 500 caracteres.</span>
+      </div>
+    </div>
+
+    <!-- Imagen (simple por ahora) -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.imagen.touched && f.imagen.invalid">
+      <label class="form-ui__label" for="imagen">Imagen (URL)</label>
+
+      <input id="imagen" class="form-ui__control" type="text" formControlName="imagen" placeholder="https://..." />
+
+      <div class="form-ui__hint">Opcional: URL o nombre de archivo.</div>
+
+      <div class="form-ui__error" *ngIf="f.imagen.touched && f.imagen.invalid">
+        <span *ngIf="f.imagen.errors?.['maxlength']">Máximo 500 caracteres.</span>
+        <span *ngIf="f.imagen.errors?.['pattern']">Debe ser una URL válida (http/https).</span>
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.precio.touched && f.precio.invalid">
+      <label class="form-ui__label" for="precio">
+        Precio <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="precio" class="form-ui__control" type="number" formControlName="precio" min="0" step="0.01" />
+
+      <div class="form-ui__error" *ngIf="f.precio.touched && f.precio.invalid">
+        <span *ngIf="f.precio.errors?.['required']">Precio es obligatorio.</span>
+        <span *ngIf="f.precio.errors?.['min']">El precio no puede ser negativo.</span>
+      </div>
+    </div>
+
+    <!-- Stock -->
+    <div class="form-ui__field"
+         [class.form-ui__field--invalid]="f.stock.touched && f.stock.invalid">
+      <label class="form-ui__label" for="stock">
+        Stock <span class="form-ui__req">*</span>
+      </label>
+
+      <input id="stock" class="form-ui__control" type="number" formControlName="stock" min="0" step="1" />
+
+      <div class="form-ui__error" *ngIf="f.stock.touched && f.stock.invalid">
+        <span *ngIf="f.stock.errors?.['required']">Stock es obligatorio.</span>
+        <span *ngIf="f.stock.errors?.['min']">El stock no puede ser negativo.</span>
+      </div>
+    </div>
+
+    <!-- Estado -->
+    <div class="form-ui__field">
+      <label class="form-ui__label" for="estado">
+        Estado <span class="form-ui__req">*</span>
+      </label>
+
+      <select id="estado" class="form-ui__control" formControlName="estado">
+        <option [ngValue]="1">Activo</option>
+        <option [ngValue]="0">Inactivo</option>
+      </select>
+    </div>
+
+    <footer class="form-ui__actions">
+      <button class="form-ui__btn form-ui__btn--primary"
+              type="submit"
+              [disabled]="form.invalid || form.pending"
+
+      >
+        Guardar
+      </button>
+
+      <button class="form-ui__btn form-ui__btn--secondary" type="button" (click)="cancelar()">
+        Cancelar
+      </button>
+    </footer>
+
+  </form>
+</section>

@@ -1,0 +1,175 @@
+<section class="list-ui">
+  <header class="list-ui__header">
+    <div class="list-ui__header-left">
+      <h2 class="list-ui__title">Productos</h2>
+      <p class="list-ui__subtitle">Lista de productos registrados.</p>
+    </div>
+
+    <div class="list-ui__header-right">
+      <button class="list-ui__btn list-ui__btn--primary" type="button" (click)="irNuevo()">
+        + Nuevo
+      </button>
+    </div>
+  </header>
+
+  <div class="list-ui__toolbar">
+    <div class="list-ui__search">
+      <input
+        class="list-ui__search-input"
+        type="text"
+        [value]="search"
+        (input)="onSearchInput($event)"
+        placeholder="Buscar por nombre, descripción o categoría..."
+      />
+    </div>
+
+    <div class="list-ui__filters">
+      <label class="list-ui__filter">
+        <span class="list-ui__filter-label">Estado</span>
+        <select class="list-ui__filter-select"
+                (change)="cambiarEstadoFiltro($event)">
+          <option value="1" [selected]="estado === 1">Activos</option>
+          <option value="0" [selected]="estado === 0">Inactivos</option>
+          <option value="-1" [selected]="estado === -1">Todos</option>
+        </select>
+      </label>
+
+      <label class="list-ui__filter">
+        <span class="list-ui__filter-label">Filas</span>
+        <select class="list-ui__filter-select" (change)="cambiarRowCount($event)">
+          <option value="5" [selected]="grid.rowCount === 5">5</option>
+          <option value="10" [selected]="grid.rowCount === 10">10</option>
+          <option value="25" [selected]="grid.rowCount === 25">25</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="list-ui__card">
+    <!-- Loading -->
+    <div class="list-ui__loading" *ngIf="cargando">
+      <span class="list-ui__loading-dot"></span>
+      <span class="list-ui__loading-text">Cargando...</span>
+    </div>
+
+    <!-- Empty -->
+    <div class="list-ui__empty" *ngIf="!cargando && !hayDatos">
+      <div class="list-ui__empty-icon">📦</div>
+      <h3 class="list-ui__empty-title">Sin productos</h3>
+      <p class="list-ui__empty-subtitle">No hay registros para mostrar con los filtros actuales.</p>
+
+      <button class="list-ui__btn list-ui__btn--primary" type="button" (click)="irNuevo()">
+        Crear producto
+      </button>
+    </div>
+
+    <!-- Table -->
+    <table class="list-ui__table" *ngIf="!cargando && hayDatos">
+      <thead class="list-ui__thead">
+      <tr>
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('Id')">
+          ID <span class="list-ui__sort">{{ sortIcon('Id') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('Nombre')">
+          Nombre <span class="list-ui__sort">{{ sortIcon('Nombre') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('CategoriaNombre')">
+          Categoría <span class="list-ui__sort">{{ sortIcon('CategoriaNombre') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--right list-ui__th--sortable" (click)="ordenar('Precio')">
+          Precio <span class="list-ui__sort">{{ sortIcon('Precio') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--right list-ui__th--sortable" (click)="ordenar('Stock')">
+          Stock <span class="list-ui__sort">{{ sortIcon('Stock') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--center list-ui__th--sortable" (click)="ordenar('Estado')">
+          Estado <span class="list-ui__sort">{{ sortIcon('Estado') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--right">Acciones</th>
+      </tr>
+      </thead>
+
+      <tbody class="list-ui__tbody">
+      <tr class="list-ui__row" *ngFor="let p of grid.rows">
+        <td class="list-ui__td">{{ p.id }}</td>
+        <td class="list-ui__td">
+          <div class="list-ui__cell-title">{{ p.nombre }}</div>
+          <div class="list-ui__cell-subtitle" *ngIf="p.descripcion">{{ p.descripcion }}</div>
+        </td>
+        <td class="list-ui__td">{{ p.categoriaNombre || '-' }}</td>
+
+        <td class="list-ui__td list-ui__cell--right">
+          $ {{ p.precio | number:'1.2-2' }}
+        </td>
+
+        <td class="list-ui__td list-ui__cell--right">{{ p.stock }}</td>
+
+        <td class="list-ui__td list-ui__cell--center">
+            <span class="list-ui__badge"
+                  [ngClass]="p.estado === 1 ? 'list-ui__badge--active' : 'list-ui__badge--inactive'">
+              {{ p.estado === 1 ? 'Activo' : 'Inactivo' }}
+            </span>
+        </td>
+
+        <td class="list-ui__td list-ui__cell--right">
+          <div class="list-ui__actions">
+            <button class="list-ui__icon-btn" type="button" title="Editar" (click)="irEditar(p.id)">✏️</button>
+
+            <button class="list-ui__icon-btn"
+                    type="button"
+                    [title]="p.estado === 1 ? 'Desactivar' : 'Activar'"
+                    (click)="toggleEstado(p)">
+              {{ p.estado === 1 ? '⛔' : '✅' }}
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Footer + Paginación -->
+    <footer class="list-ui__footer" *ngIf="!cargando">
+      <span class="list-ui__footer-left">{{ rangoTexto }}</span>
+
+      <div class="list-ui__pager" *ngIf="totalPaginas > 1">
+        <button class="list-ui__pager-btn"
+                type="button"
+                [disabled]="grid.current === 1"
+                (click)="cambiarPagina(1)">
+          «
+        </button>
+
+        <button class="list-ui__pager-btn"
+                type="button"
+                [disabled]="grid.current === 1"
+                (click)="cambiarPagina(grid.current - 1)">
+          ‹
+        </button>
+
+        <span class="list-ui__pager-info">
+          Página {{ grid.current }} / {{ totalPaginas }}
+        </span>
+
+        <button class="list-ui__pager-btn"
+                type="button"
+                [disabled]="grid.current === totalPaginas"
+                (click)="cambiarPagina(grid.current + 1)">
+          ›
+        </button>
+
+        <button class="list-ui__pager-btn"
+                type="button"
+                [disabled]="grid.current === totalPaginas"
+                (click)="cambiarPagina(totalPaginas)">
+          »
+        </button>
+      </div>
+    </footer>
+  </div>
+</section>

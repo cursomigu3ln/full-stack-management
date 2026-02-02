@@ -1,0 +1,255 @@
+.list-ui {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.list-ui__header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.list-ui__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.list-ui__subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
+.list-ui__btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.list-ui__btn--primary {
+  background: #1976d2;
+  color: #fff;
+}
+.list-ui__btn--primary:hover { background: #125aa0; }
+
+.list-ui__toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.list-ui__search {
+  flex: 1;
+  min-width: 260px;
+}
+
+.list-ui__search-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  font-size: 14px;
+}
+.list-ui__search-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+}
+
+.list-ui__filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.list-ui__filter {
+  display: grid;
+  gap: 4px;
+}
+
+.list-ui__filter-label {
+  font-size: 12px;
+  color: #6b6b6b;
+  font-weight: 600;
+}
+
+.list-ui__filter-select {
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid #cfcfcf;
+  outline: none;
+  background: #fff;
+}
+
+.list-ui__card {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.list-ui__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.list-ui__thead th {
+  background: #fafafa;
+  font-size: 13px;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.list-ui__th--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.list-ui__sort {
+  margin-left: 6px;
+  font-size: 12px;
+  color: #7a7a7a;
+}
+
+.list-ui__tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: top;
+}
+
+.list-ui__row:hover {
+  background: #fcfcfc;
+}
+
+.list-ui__cell--right { text-align: right; }
+.list-ui__cell--center { text-align: center; }
+
+.list-ui__cell-title {
+  font-weight: 700;
+}
+
+.list-ui__cell-subtitle {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #7a7a7a;
+}
+
+.list-ui__badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.list-ui__badge--active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.list-ui__badge--inactive {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.list-ui__actions {
+  display: inline-flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.list-ui__icon-btn {
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.list-ui__icon-btn:hover { background: #f6f6f6; }
+
+.list-ui__footer {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #fafafa;
+  font-size: 13px;
+  color: #5f5f5f;
+}
+
+.list-ui__pager {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.list-ui__pager-btn {
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.list-ui__pager-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.list-ui__pager-info {
+  font-weight: 700;
+  color: #333;
+}
+
+/* Loading + Empty */
+.list-ui__loading {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 16px;
+}
+
+.list-ui__loading-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #1976d2;
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: .5; }
+  50% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(1); opacity: .5; }
+}
+
+.list-ui__empty {
+  padding: 28px 16px;
+  text-align: center;
+}
+
+.list-ui__empty-icon {
+  font-size: 34px;
+}
+
+.list-ui__empty-title {
+  margin: 8px 0 0 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.list-ui__empty-subtitle {
+  margin: 6px 0 14px 0;
+  color: #6b6b6b;
+  font-size: 13px;
+}
