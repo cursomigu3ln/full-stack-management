@@ -30,7 +30,9 @@ export function stockDisponibleValidator(
 ): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const TipoTransaccion = group.get('TipoTransaccion')?.value as TipoTransaccion | null;
+
     const IdProducto = Number(group.get('IdProducto')?.value ?? 0);
+    console.log("IdProducto",IdProducto)
     const cantidad = Number(group.get('cantidad')?.value ?? 0);
 
     // si falta data base, no bloquees
@@ -82,7 +84,7 @@ export class TransaccionesFormComponent implements OnInit {
   // -------- form --------
   form = this.fb.group(
     {
-      fecha: ['', [Validators.required]],
+
       TipoTransaccion: ['COMPRA' as TipoTransaccion, [Validators.required]],
 
       IdProducto: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -111,22 +113,21 @@ export class TransaccionesFormComponent implements OnInit {
     this.cargarProductosActivos();
     this.detectarModo();
   }
+  private recalcularTotal(): void {
+    const cantidad = Number(this.f.cantidad.value ?? 0);
+    const pu = Number(this.f.precioUnitario.value ?? 0);
+    const total = Math.max(0, cantidad * pu);
 
+    // ✅ mejor setValue directo al control disabled
+    this.form.get('precioTotal')?.setValue(total, { emitEvent: false });
+  }
   // -------- setups --------
   private setupAutoCalculoTotal(): void {
-    const recalc = () => {
-      const cantidad = Number(this.f.cantidad.value ?? 0);
-      const pu = Number(this.f.precioUnitario.value ?? 0);
-      const total = Math.max(0, cantidad * pu);
+    this.f.cantidad.valueChanges.subscribe(() => this.recalcularTotal());
+    this.f.precioUnitario.valueChanges.subscribe(() => this.recalcularTotal());
 
-      // precioTotal está disabled, se setea con patchValue
-      this.form.patchValue({ precioTotal: total }, { emitEvent: false });
-    };
-
-    this.f.cantidad.valueChanges.subscribe(recalc);
-    this.f.precioUnitario.valueChanges.subscribe(recalc);
-
-    recalc();
+    // inicial
+    this.recalcularTotal();
   }
 
   /**
@@ -139,8 +140,13 @@ export class TransaccionesFormComponent implements OnInit {
       const prod = this.productos.find((x) => x.id === Number(id));
       if (!prod) return;
 
-      // setea precio unitario desde producto
-      this.form.patchValue({ precioUnitario: Number(prod.precio ?? 0) }, { emitEvent: true });
+      this.form.patchValue(
+        { precioUnitario: Number(prod.precio ?? 0) },
+        { emitEvent: true }
+      );
+
+      // ✅ forzar total
+      this.recalcularTotal();
     });
   }
 
@@ -214,16 +220,16 @@ export class TransaccionesFormComponent implements OnInit {
         }
 
         const t = res.data;
+        var cantidad=t.cantidad ?? 1;
+        var precioUnitario=t.precioUnitario ?? 0;
 
+        var precioTotal=cantidad*precioUnitario;
         this.form.patchValue({
-          fecha: t.fecha ?? '',
           TipoTransaccion: (t.TipoTransaccion ?? 'COMPRA') as TipoTransaccion,
-
           IdProducto: (t.idProducto ?? null) as any,
-          cantidad: t.cantidad ?? 1,
-
-          precioUnitario: t.precioUnitario ?? 0,
-          precioTotal: t.precioTotal ?? 0,
+          cantidad: cantidad,
+          precioUnitario:precioUnitario ,
+          precioTotal:precioTotal,
 
           detalle: t.detalle ?? '',
         });
@@ -270,7 +276,7 @@ export class TransaccionesFormComponent implements OnInit {
     const raw = this.form.getRawValue();
 
     const payload: TransaccionCrearRequest = {
-      fecha: String(raw.fecha || '').trim(),
+
       TipoTransaccion: raw.TipoTransaccion as TipoTransaccion,
 
       IdProducto: Number(raw.IdProducto),

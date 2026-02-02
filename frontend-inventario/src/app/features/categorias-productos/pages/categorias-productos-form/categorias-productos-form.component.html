@@ -5,7 +5,16 @@
   </header>
 
   <form class="form-ui__form" [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="form-ui__field">
+      <label class="form-ui__label" for="estado">
+        Estado <span class="form-ui__req">*</span>
+      </label>
 
+      <select id="estado" class="form-ui__control" formControlName="estado">
+        <option [ngValue]="1">Activo</option>
+        <option [ngValue]="0">Inactivo</option>
+      </select>
+    </div>
     <div class="form-ui__field"
          [class.form-ui__field--invalid]="f.nombre.touched && f.nombre.invalid">
       <label class="form-ui__label" for="nombre">
@@ -39,19 +48,12 @@
       </div>
     </div>
 
-    <div class="form-ui__field">
-      <label class="form-ui__label" for="estado">
-        Estado <span class="form-ui__req">*</span>
-      </label>
 
-      <select id="estado" class="form-ui__control" formControlName="estado">
-        <option [ngValue]="1">Activo</option>
-        <option [ngValue]="0">Inactivo</option>
-      </select>
-    </div>
 
     <footer class="form-ui__actions">
-      <button class="form-ui__btn form-ui__btn--primary" type="submit" [disabled]="form.invalid || form.pending">
+      <button class="form-ui__btn form-ui__btn--primary"
+              type="submit"
+              [disabled]="form.invalid || guardando">
         Guardar
       </button>
 

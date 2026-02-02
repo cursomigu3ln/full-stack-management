@@ -49,7 +49,6 @@ export class ProductosFormComponent implements OnInit {
     this.cargarCategoriasActivas();
     this.detectarModo();
 
-    // si está vacío, no validar pattern
     this.form.controls.imagen.valueChanges.subscribe(val => {
       const ctrl = this.form.controls.imagen;
       if (!val) ctrl.setErrors(null);
@@ -75,7 +74,7 @@ export class ProductosFormComponent implements OnInit {
   private cargarProducto(id: number): void {
     this.productosApi.obtener(id).subscribe({
       next: (res) => {
-        // ✅ si el backend responde success=false o no trae data
+
         if (!res?.success || !res?.data) {
           this.toast.warning('No encontrado', 'El producto no existe o fue eliminado.');
           this.router.navigate(['/productos']);
@@ -97,16 +96,16 @@ export class ProductosFormComponent implements OnInit {
       error: (err) => {
         console.error(err);
 
-        // ✅ si backend devuelve 404
+
         if (err?.status === 404) {
           this.toast.warning('No encontrado', 'El producto no existe.');
           this.router.navigate(['/productos']);
           return;
         }
 
-        // ✅ cualquier otro error (500, timeout, etc.)
+
         this.toast.error('Error', 'No se pudo cargar el producto desde el API.');
-        this.router.navigate(['/productos']); // opcional: si quieres siempre regresar
+        this.router.navigate(['/productos']);
       }
     });
   }
@@ -131,7 +130,6 @@ export class ProductosFormComponent implements OnInit {
     });
   }
 
-  // ✅ botón Guardar solo activo si form válido + no guardando
   get puedeGuardar(): boolean {
     return this.form.valid && !this.guardando;
   }

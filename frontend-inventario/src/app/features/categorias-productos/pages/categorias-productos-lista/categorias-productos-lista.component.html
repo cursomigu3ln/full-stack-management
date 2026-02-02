@@ -2,7 +2,7 @@
   <header class="list-ui__header">
     <div class="list-ui__header-left">
       <h2 class="list-ui__title">Categorías</h2>
-      <p class="list-ui__subtitle">Administra las categorías del inventario.</p>
+      <p class="list-ui__subtitle">Lista de categorías registradas.</p>
     </div>
 
     <div class="list-ui__header-right">
@@ -14,62 +14,160 @@
 
   <div class="list-ui__toolbar">
     <div class="list-ui__search">
-      <input class="list-ui__search-input" type="text" placeholder="Buscar por nombre..." />
+      <input
+        class="list-ui__search-input"
+        type="text"
+        [value]="search"
+        (input)="onSearchInput($event)"
+        placeholder="Buscar por nombre o descripción..."
+      />
+    </div>
+
+    <div class="list-ui__filters">
+      <label class="list-ui__filter">
+        <span class="list-ui__filter-label">Estado</span>
+        <select class="list-ui__filter-select" (change)="cambiarEstadoFiltro($event)">
+          <option value="1" [selected]="estado === 1">Activos</option>
+          <option value="0" [selected]="estado === 0">Inactivos</option>
+          <option value="-1" [selected]="estado === -1">Todos</option>
+        </select>
+      </label>
+
+      <label class="list-ui__filter">
+        <span class="list-ui__filter-label">Filas</span>
+        <select class="list-ui__filter-select" (change)="cambiarRowCount($event)">
+          <option value="5" [selected]="grid.rowCount === 5">5</option>
+          <option value="10" [selected]="grid.rowCount === 10">10</option>
+          <option value="25" [selected]="grid.rowCount === 25">25</option>
+        </select>
+      </label>
     </div>
   </div>
 
   <div class="list-ui__card">
-    <table class="list-ui__table">
+    <!-- Loading -->
+    <div class="list-ui__loading" *ngIf="cargando">
+      <span class="list-ui__loading-dot"></span>
+      <span class="list-ui__loading-text">Cargando...</span>
+    </div>
+
+    <!-- Empty -->
+    <div class="list-ui__empty" *ngIf="!cargando && !hayDatos">
+      <div class="list-ui__empty-icon">🏷️</div>
+      <h3 class="list-ui__empty-title">Sin categorías</h3>
+      <p class="list-ui__empty-subtitle">No hay registros para mostrar con los filtros actuales.</p>
+
+      <button class="list-ui__btn list-ui__btn--primary" type="button" (click)="irNuevo()">
+        Crear categoría
+      </button>
+    </div>
+
+    <!-- Table -->
+    <table class="list-ui__table" *ngIf="!cargando && hayDatos">
       <thead class="list-ui__thead">
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th class="list-ui__cell--center">Estado</th>
-        <th class="list-ui__cell--right">Acciones</th>
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('Id')">
+          ID <span class="list-ui__sort">{{ sortIcon('Id') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('Nombre')">
+          Nombre <span class="list-ui__sort">{{ sortIcon('Nombre') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__th--sortable" (click)="ordenar('Descripcion')">
+          Descripción <span class="list-ui__sort">{{ sortIcon('Descripcion') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--center list-ui__th--sortable" (click)="ordenar('Estado')">
+          Estado <span class="list-ui__sort">{{ sortIcon('Estado') }}</span>
+        </th>
+
+        <th class="list-ui__th list-ui__cell--right">Acciones</th>
       </tr>
       </thead>
 
       <tbody class="list-ui__tbody">
-      <!-- Mock: luego conectamos a API -->
-      <tr>
-        <td>1</td>
-        <td>Bebidas</td>
-        <td>Productos líquidos</td>
-        <td class="list-ui__cell--center">
-          <span class="list-ui__badge list-ui__badge--active">Activo</span>
-        </td>
-        <td class="list-ui__cell--right">
-          <div class="list-ui__actions">
-            <button class="list-ui__icon-btn" type="button" title="Editar">✏️</button>
-            <button class="list-ui__icon-btn" type="button" title="Eliminar">🗑️</button>
-          </div>
-        </td>
-      </tr>
+      <tr class="list-ui__row" *ngFor="let c of grid.rows">
+        <td class="list-ui__td">{{ c.id }}</td>
 
-      <tr>
-        <td>2</td>
-        <td>Electrónica</td>
-        <td>Accesorios</td>
-        <td class="list-ui__cell--center">
-          <span class="list-ui__badge list-ui__badge--inactive">Inactivo</span>
+        <td class="list-ui__td">
+          <div class="list-ui__cell-title">{{ c.nombre }}</div>
         </td>
-        <td class="list-ui__cell--right">
+
+        <td class="list-ui__td">
+          <div class="list-ui__cell-subtitle" *ngIf="c.descripcion; else sinDesc">
+            {{ c.descripcion }}
+          </div>
+          <ng-template #sinDesc>-</ng-template>
+        </td>
+
+        <td class="list-ui__td list-ui__cell--center">
+            <span
+              class="list-ui__badge"
+              [ngClass]="c.estado === 1 ? 'list-ui__badge--active' : 'list-ui__badge--inactive'"
+            >
+              {{ c.estado === 1 ? 'Activo' : 'Inactivo' }}
+            </span>
+        </td>
+
+        <td class="list-ui__td list-ui__cell--right">
           <div class="list-ui__actions">
-            <button class="list-ui__icon-btn" type="button" title="Editar">✏️</button>
-            <button class="list-ui__icon-btn" type="button" title="Eliminar">🗑️</button>
+            <button class="list-ui__icon-btn" type="button" title="Editar" (click)="irEditar(c.id)">
+              ✏️
+            </button>
+
+            <button
+              class="list-ui__icon-btn"
+              type="button"
+              [title]="c.estado === 1 ? 'Desactivar' : 'Activar'"
+              (click)="toggleEstado(c)"
+            >
+              {{ c.estado === 1 ? '⛔' : '✅' }}
+            </button>
           </div>
         </td>
       </tr>
       </tbody>
     </table>
 
-    <!-- si no hay datos (luego lo activamos con *ngIf) -->
-    <!-- <div class="list-ui__empty">No existen categorías registradas.</div> -->
+    <!-- Footer + Paginación -->
+    <footer class="list-ui__footer" *ngIf="!cargando">
+      <span class="list-ui__footer-left">{{ rangoTexto }}</span>
 
-    <footer class="list-ui__footer">
-      <span>Total: 2</span>
-      <span>Listado de categorías</span>
+      <div class="list-ui__pager" *ngIf="totalPaginas > 1">
+        <button class="list-ui__pager-btn" type="button" [disabled]="grid.current === 1" (click)="cambiarPagina(1)">
+          «
+        </button>
+
+        <button
+          class="list-ui__pager-btn"
+          type="button"
+          [disabled]="grid.current === 1"
+          (click)="cambiarPagina(grid.current - 1)"
+        >
+          ‹
+        </button>
+
+        <span class="list-ui__pager-info">Página {{ grid.current }} / {{ totalPaginas }}</span>
+
+        <button
+          class="list-ui__pager-btn"
+          type="button"
+          [disabled]="grid.current === totalPaginas"
+          (click)="cambiarPagina(grid.current + 1)"
+        >
+          ›
+        </button>
+
+        <button
+          class="list-ui__pager-btn"
+          type="button"
+          [disabled]="grid.current === totalPaginas"
+          (click)="cambiarPagina(totalPaginas)"
+        >
+          »
+        </button>
+      </div>
     </footer>
   </div>
 </section>

@@ -6,18 +6,7 @@
 
   <form class="form-ui__form" [formGroup]="form" (ngSubmit)="guardar()">
 
-    <!-- Fecha -->
-    <div class="form-ui__field" [class.form-ui__field--invalid]="f.fecha.touched && f.fecha.invalid">
-      <label class="form-ui__label" for="fecha">
-        Fecha <span class="form-ui__req">*</span>
-      </label>
 
-      <input id="fecha" class="form-ui__control" type="date" formControlName="fecha" />
-
-      <div class="form-ui__error" *ngIf="f.fecha.touched && f.fecha.invalid">
-        <span *ngIf="f.fecha.errors?.['required']">Fecha es obligatoria.</span>
-      </div>
-    </div>
 
     <!-- Tipo -->
     <div class="form-ui__field" [class.form-ui__field--invalid]="f.TipoTransaccion.touched && f.TipoTransaccion.invalid">

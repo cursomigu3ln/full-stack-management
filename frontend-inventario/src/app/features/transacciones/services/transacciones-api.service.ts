@@ -9,7 +9,7 @@ import { GridRequest, GridResult } from '../../../../shared/models/grid.model';
 export type TipoTransaccion = 'COMPRA' | 'VENTA';
 
 export type TransaccionCrearRequest = {
-  fecha: string; // ISO o yyyy-MM-dd según backend
+  fecha?: string; // ISO o yyyy-MM-dd según backend
   TipoTransaccion: TipoTransaccion;
   IdProducto: number;
   idProducto?: number | null;
@@ -24,6 +24,7 @@ export type TransaccionRowVm = {
   id: string;
   fecha: string;
   TipoTransaccion: TipoTransaccion;
+  tipoTransaccion?:  TipoTransaccion;
 
   IdProducto: number;
   productoNombre?: string | null; // opcional para la tabla (si backend lo devuelve)
